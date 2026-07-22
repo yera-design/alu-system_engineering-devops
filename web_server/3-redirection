@@ -1,32 +1,20 @@
 #!/usr/bin/env bash
 # Creating a server with a redirect
-
-# Updating all packages
-sudo apt-get update -y && sudo apt-get upgrade -y
-
-# Install Nginx
-sudo apt-get install nginx -y
-
-# Creating an index page
-echo "Holberton School" | sudo tee /var/www/html/index.html
-
-# Write data to nginx.conf
+apt-get update -y
+apt-get install -y nginx
+echo "Holberton School" > /var/www/html/index.html
 echo "
 events {
-
 }
-
 http {
-	server {
-		listen 80;
-
-		root /var/www/html;
-
-		location /redirect_me {
-			return 301 https://google.com;
-		}
-	}
-}" | sudo tee /etc/nginx/nginx.conf
-
-# Reload nginx
-sudo service nginx restart
+        server {
+                listen 80 default_server;
+                root /var/www/html;
+                index index.html;
+                location /redirect_me {
+                        return 301 https://google.com;
+                }
+        }
+}" > /etc/nginx/nginx.conf
+nginx -t
+service nginx restart
